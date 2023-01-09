@@ -1,5 +1,6 @@
 package com.devsuperior.userdept.services;
 
+import com.devsuperior.userdept.entities.Department;
 import com.devsuperior.userdept.entities.User;
 import com.devsuperior.userdept.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,17 @@ public class UserService {
     }
 
     public User insert(User user) {
+        return userRepository.save(user);
+    }
+
+    public User update(Long id, String name, String email, Department department) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        user.setName(name);
+        user.setEmail(email);
+        user.setDepartment(department);
+
         return userRepository.save(user);
     }
 
