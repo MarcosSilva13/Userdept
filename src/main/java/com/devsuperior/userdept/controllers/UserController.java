@@ -1,8 +1,9 @@
 package com.devsuperior.userdept.controllers;
 
 import com.devsuperior.userdept.entities.User;
-import com.devsuperior.userdept.repositories.UserRepository;
+import com.devsuperior.userdept.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,29 +12,27 @@ import java.util.List;
 @RequestMapping(value = "/users")
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping
     public List<User> findAll() {
-        return userRepository.findAll();
+        return userService.findAll();
     }
 
     @GetMapping(value = "/{id}")
     public User findById(@PathVariable Long id) {
-        if (userRepository.findById(id).isPresent()) {
-            return userRepository.findById(id).get();
-        }
-        return null;
+        return userService.findById(id);
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public User insert(@RequestBody User user) {
-        return userRepository.save(user);
+        return userService.insert(user);
     }
 
     @DeleteMapping(value = "/{id}")
     public String deleteById(@PathVariable Long id) {
-        userRepository.deleteById(id);
+        userService.deleteById(id);
         return "Deletado com sucesso!";
     }
 }
