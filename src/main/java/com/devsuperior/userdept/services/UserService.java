@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class UserService {
@@ -18,7 +19,8 @@ public class UserService {
     }
 
     public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado!"));
     }
 
     public User insert(User user) {
@@ -27,7 +29,7 @@ public class UserService {
 
     public User update(Long id, String name, String email, Department department) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado!"));
 
         user.setName(name);
         user.setEmail(email);
