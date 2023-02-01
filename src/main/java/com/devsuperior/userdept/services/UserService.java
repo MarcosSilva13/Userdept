@@ -4,6 +4,7 @@ import com.devsuperior.userdept.entities.Department;
 import com.devsuperior.userdept.entities.User;
 import com.devsuperior.userdept.repositories.UserRepository;
 import com.devsuperior.userdept.services.exceptions.UserNotFoundException;
+import com.devsuperior.userdept.services.exceptions.UserNullFieldsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,18 @@ public class UserService {
     }
 
     public User insert(User user) {
+        if (checkNullFields(user)) {
+            throw new UserNullFieldsException("Verifique o preenchimento dos campos");
+        }
         return userRepository.save(user);
+    }
+
+    private boolean checkNullFields(User user) {
+        if (user.getName() == null || user.getEmail() == null
+                || user.getName().isEmpty() || user.getEmail().isEmpty()) {
+            return true;
+        }
+        return false;
     }
 
     public User update(Long id, String name, String email, Department department) {
